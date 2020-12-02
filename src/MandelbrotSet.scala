@@ -11,34 +11,33 @@ import java.awt.event.MouseWheelEvent
 import java.awt.Color
 import scala.swing.event._
 
-class JuliaSet {
+class MandelbrotSet {
   val WIDTH = 600
   val HEIGHT = 400
-  val depth = 20
+  val depth = 50
   var rangeReal = (-2.0f, 2.0f)
   var rangeImag = (-2.0f, 2.0f)
 
   var z_0 = new Complex(0, 0)
-  
+
   def converges(c: Complex): Int = { //c är en punkt på canvasen.
-    
     var n = 0
-    
-    var z = c
+
+    var z = z_0
     while (z.magnitude <= 2.0f && (n < depth)) {
-      z = (z * z) + z_0
+      z = (z * z) + c
       n += 1
     }
-    
+
     return n
-    
-  }
-  
-  def setZ0(c:Complex){
-    this.z_0 = c
+
   }
 
+  def setZ0(c: Complex) {
+    this.z_0 = c
+  }
   def render: BufferedImage = {
+
     val buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
     val g = buffer.getGraphics.asInstanceOf[Graphics2D]
 
@@ -47,7 +46,7 @@ class JuliaSet {
 
       for (x <- 0 to WIDTH) {
         val x_c = rangeReal._1 + (x.toFloat / WIDTH) * (rangeReal._2 - rangeReal._1)
-        
+
         val c = new Complex(
           x_c,
           y_c)
@@ -63,15 +62,17 @@ class JuliaSet {
             case 2 => new Color(50, 50, 50)
           }
         }
-        
         val color3 = new Color(
-            (math.pow(level.toFloat/depth, 1) * 200).toInt,
-            0,0);
-        
+          (math.pow(level.toFloat / depth, 1) * 200).toInt,
+          0, 0);
 
         g.setColor(color3)
         g.drawRect(x, y, 1, 1)
+        
+        g.setColor(Color.WHITE)
 
+        
+        
       }
     }
 
